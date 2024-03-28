@@ -23,7 +23,7 @@ route.get("/user/:email", (req: Request, res: Response) => {
   const emailValid = emailIsvalid(email);
 
   if (!emailValid) {
-    res.status(500).send({ message: `Email inválid` });
+    res.status(500).send({ message: `Email invalid` });
   }
 });
 export default route;
