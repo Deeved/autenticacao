@@ -1,7 +1,9 @@
-import { IUserRepository, UserRepositoryResponse } from "./IUserRepository";
+import { HTTPResponse } from "../httpResponse";
+import { UserRepository } from "./userRepository";
+import { User } from "./user";
 
-export async function ListUsers(
-  repo: IUserRepository
-): Promise<UserRepositoryResponse> {
+export async function listUsers(
+  repo: UserRepository
+): Promise<HTTPResponse<User>> {
   return await repo.list();
 }

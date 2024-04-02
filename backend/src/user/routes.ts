@@ -1,14 +1,14 @@
 import express from "express";
 import { Request, Response } from "express";
-import { ListUsers } from "./listUsers";
-import { UserRepositoryPG } from "./userRepository";
+import { listUsers } from "./listUsers";
+import { DataPostgres } from "./dataPostgres";
 import emailIsvalid from "../utils/emailValidator";
 
 const route = express();
 
 route.get("/users", async (req: Request, res: Response) => {
-  const userRepositoryPG = new UserRepositoryPG();
-  const response = await ListUsers(userRepositoryPG);
+  const userRepositoryPG = new DataPostgres();
+  const response = await listUsers(userRepositoryPG);
 
   if (response.error) {
     res.status(500).json({ error: response.error.message });
