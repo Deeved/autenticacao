@@ -1,7 +1,7 @@
 export interface HTTPResponse<T> {
   error?: {
     message: string;
-    erro: any;
+    erro?: any;
   };
   data?: T[];
 }

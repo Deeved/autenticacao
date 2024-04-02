@@ -1,7 +1,7 @@
 import { Client } from "pg";
 import { UserRepository } from "./userRepository";
 import { HTTPResponse } from "../httpResponse";
-import { User } from "./user";
+import { Token, User } from "./user";
 
 export class DataPostgres implements UserRepository {
   private client!: Client;
@@ -28,12 +28,36 @@ export class DataPostgres implements UserRepository {
       users = response.rows;
     } catch (error) {
       return {
-        error: { message: "Error when quering users", erro: error },
+        error: { message: "Error when quering users" },
       };
     } finally {
       this.client.end();
     }
 
     return { data: users };
+  }
+
+  async login(user: User): Promise<HTTPResponse<Token>> {
+    if (!user.password) {
+      return { error: { message: "Password required" } };
+    }
+
+    let dataToken = {
+      token: "",
+    };
+
+    try {
+      this.client.connect();
+      const query = {
+        text: "SELECT * from users WHERE email = $1",
+        values: [user.password],
+      };
+      const response = await this.client.query(query);
+      //TODO: implement the rest of the logic
+    } catch (error) {
+      return { error: { message: "Error when logging in" } };
+    }
+
+    return { data: [dataToken] };
   }
 }
