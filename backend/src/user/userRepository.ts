@@ -5,4 +5,6 @@ export interface UserRepository {
   list(): Promise<HTTPResponse<User>>;
 
   login(user: User): Promise<HTTPResponse<Token>>;
+
+  register(user: User): Promise<HTTPResponse<{ message: string }>>;
 }

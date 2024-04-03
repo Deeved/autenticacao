@@ -56,8 +56,41 @@ export class DataPostgres implements UserRepository {
       //TODO: implement the rest of the logic
     } catch (error) {
       return { error: { message: "Error when logging in" } };
+    } finally {
+      this.client.end();
     }
 
     return { data: [dataToken] };
+  }
+
+  async register(user: User): Promise<HTTPResponse<any>> {
+    try {
+      await this.client.connect();
+
+      const { rows } = await this.client.query(
+        `SELECT email FROM users WHERE email = '${user.email}'`
+      );
+
+      if (rows[0]) {
+        return { error: { message: "Email already exists" } };
+      }
+
+      const result = await this.client.query(
+        `INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *`,
+        [user.name, user.email, user.password!]
+      );
+
+      if (!result.rows[0].id) {
+        return { error: { message: "Error registering user" } };
+      }
+
+      return {
+        data: [{ message: "User registered successfully" }],
+      };
+    } catch (error) {
+      return { error: { message: "Error registering user" } };
+    } finally {
+      this.client.end();
+    }
   }
 }
