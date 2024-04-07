@@ -1,9 +1,9 @@
-import { HTTPResponse } from "../httpResponse";
 import { UserRepository } from "./userRepository";
 import { User } from "./user";
+import { QueryReponse } from "../queryResponse";
 
 export async function listUsers(
   repo: UserRepository
-): Promise<HTTPResponse<User>> {
+): Promise<QueryReponse<User>> {
   return await repo.list();
 }

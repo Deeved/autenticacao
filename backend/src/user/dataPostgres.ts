@@ -19,8 +19,8 @@ export class DataPostgres implements UserRepository {
     this.client = new Client(this.config);
   }
 
-  async list(): Promise<HTTPResponse<User>> {
-    let users = [];
+  async list(): Promise<QueryReponse<User>> {
+    let users: User[] = [];
     try {
       await this.client.connect();
       const response = await this.client.query(
@@ -29,13 +29,14 @@ export class DataPostgres implements UserRepository {
       users = response.rows;
     } catch (error) {
       return {
-        error: { message: "Error when quering users" },
+        success: false,
+        message: "Error when quering users",
       };
     } finally {
       this.client.end();
     }
 
-    return { data: users };
+    return { success: true, data: users };
   }
 
   async login(user: User): Promise<HTTPResponse<Token>> {
@@ -64,7 +65,7 @@ export class DataPostgres implements UserRepository {
     return { data: [dataToken] };
   }
 
-  async register(user: User): Promise<QueryReponse<any>> {
+  async register(user: User): Promise<QueryReponse<User>> {
     try {
       await this.client.connect();
 

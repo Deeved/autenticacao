@@ -10,13 +10,13 @@ const route = express();
 
 route.get("/users", async (req: Request, res: Response) => {
   const userRepositoryPG = new DataPostgres();
-  const response = await listUsers(userRepositoryPG);
+  const { success, data, message } = await listUsers(userRepositoryPG);
 
-  if (response.error) {
-    res.status(500).json({ error: response.error.message });
+  if (!success) {
+    res.status(500).json({ success, error: message });
   }
 
-  res.status(200).send(response.data);
+  res.status(200).send({ success: true, data });
 });
 
 route.get("/user/:email", (req: Request, res: Response) => {
