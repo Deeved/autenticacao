@@ -2,6 +2,7 @@ import { Client } from "pg";
 import { UserRepository } from "./userRepository";
 import { HTTPResponse } from "../httpResponse";
 import { Token, User } from "./user";
+import { QueryReponse } from "../queryResponse";
 
 export class DataPostgres implements UserRepository {
   private client!: Client;
@@ -63,7 +64,7 @@ export class DataPostgres implements UserRepository {
     return { data: [dataToken] };
   }
 
-  async register(user: User): Promise<HTTPResponse<any>> {
+  async register(user: User): Promise<QueryReponse<any>> {
     try {
       await this.client.connect();
 
@@ -72,7 +73,7 @@ export class DataPostgres implements UserRepository {
       );
 
       if (rows[0]) {
-        return { error: { message: "Email already exists" } };
+        return { success: false, message: "Email already exists" };
       }
 
       const result = await this.client.query(
@@ -81,14 +82,12 @@ export class DataPostgres implements UserRepository {
       );
 
       if (!result.rows[0].id) {
-        return { error: { message: "Error registering user" } };
+        return { success: false, message: "Error registering user" };
       }
 
-      return {
-        data: [{ message: "User registered successfully" }],
-      };
+      return { success: true };
     } catch (error) {
-      return { error: { message: "Error registering user" } };
+      return { success: false, message: "Error registering user" };
     } finally {
       this.client.end();
     }

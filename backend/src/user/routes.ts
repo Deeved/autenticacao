@@ -73,13 +73,13 @@ route.post("/user", async (req: Request, res: Response) => {
   };
 
   const dbpg = new DataPostgres();
-  const response = await register(dbpg, newUser);
+  const { success, message } = await register(dbpg, newUser);
 
-  if (response.error) {
-    return res.status(500).json(response);
+  if (!success) {
+    return res.status(500).json({ success, message });
   }
 
-  res.status(200).json(response);
+  res.status(200).json({ success, message: "User registered successfully" });
 });
 
 export default route;
