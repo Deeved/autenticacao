@@ -1,4 +1,3 @@
-import { HTTPResponse } from "../httpResponse";
 import { QueryReponse } from "../queryResponse";
 import { User } from "./user";
 import { UserRepository } from "./userRepository";
