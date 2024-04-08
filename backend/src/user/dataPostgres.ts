@@ -78,8 +78,13 @@ export class DataPostgres implements UserRepository {
       }
 
       const result = await this.client.query(
-        `INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *`,
-        [user.name, user.email, user.password!]
+        `INSERT INTO users (name, email, password, created_at) VALUES ($1, $2, $3, $4) RETURNING *`,
+        [
+          user.name,
+          user.email,
+          user.password!,
+          new Date().toISOString().slice(0, 19).replace(".", " "),
+        ]
       );
 
       if (!result.rows[0].id) {

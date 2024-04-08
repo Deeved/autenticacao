@@ -5,6 +5,7 @@ import { DataPostgres } from "./dataPostgres";
 import emailIsvalid from "../utils/emailValidator";
 import { register } from "./register";
 import { User } from "./user";
+import { creatHashPassword } from "../utils/encrypt";
 
 const route = express();
 
@@ -69,7 +70,7 @@ route.post("/user", async (req: Request, res: Response) => {
   const newUser: User = {
     name,
     email,
-    password,
+    password: creatHashPassword(password),
   };
 
   const dbpg = new DataPostgres();
