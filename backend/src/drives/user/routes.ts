@@ -1,11 +1,11 @@
 import express from "express";
 import { Request, Response } from "express";
-import { listUsers } from "./listUsers";
-import { DataPostgres } from "./dataPostgres";
-import emailIsvalid from "../utils/emailValidator";
-import { register } from "./register";
-import { User } from "./user";
-import { creatHashPassword } from "../utils/encrypt";
+import { DataPostgres } from "../../resources/user/dataPostgres";
+import emailIsvalid from "../../application/utils/emailValidator";
+import { creatHashPassword } from "../../application/utils/encrypt";
+import { listUsers } from "../../application/user/listUsers";
+import { User } from "../../application/user/user";
+import { register } from "../../application/user/register";
 
 const route = express();
 

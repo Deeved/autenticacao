@@ -1,6 +1,6 @@
-import { HTTPResponse } from "../httpResponse";
-import { QueryReponse } from "../queryResponse";
-import { Token, User } from "./user";
+import { Token, User } from "../../application/user/user";
+import { HTTPResponse } from "../../httpResponse";
+import { QueryReponse } from "../../queryResponse";
 
 export interface UserRepository {
   list(): Promise<QueryReponse<User>>;

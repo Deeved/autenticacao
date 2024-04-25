@@ -1,8 +1,8 @@
 import { Client } from "pg";
 import { UserRepository } from "./userRepository";
-import { HTTPResponse } from "../httpResponse";
-import { Token, User } from "./user";
-import { QueryReponse } from "../queryResponse";
+import { HTTPResponse } from "../../httpResponse";
+import { QueryReponse } from "../../queryResponse";
+import { Token, User } from "../../application/user/user";
 
 export class DataPostgres implements UserRepository {
   private client!: Client;

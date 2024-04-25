@@ -1,6 +1,6 @@
-import { UserRepository } from "./userRepository";
+import { QueryReponse } from "../../queryResponse";
+import { UserRepository } from "../../resources/user/userRepository";
 import { User } from "./user";
-import { QueryReponse } from "../queryResponse";
 
 export async function listUsers(
   repo: UserRepository

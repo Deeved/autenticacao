@@ -1,6 +1,6 @@
-import { QueryReponse } from "../queryResponse";
+import { QueryReponse } from "../../queryResponse";
+import { UserRepository } from "../../resources/user/userRepository";
 import { User } from "./user";
-import { UserRepository } from "./userRepository";
 
 export async function register(
   repo: UserRepository,
