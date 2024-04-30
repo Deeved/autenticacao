@@ -1,86 +1,31 @@
 import express from "express";
 import { Request, Response } from "express";
-import { DataPostgres } from "../../resources/user/dataPostgres";
-import emailIsvalid from "../../application/utils/emailValidator";
-import { creatHashPassword } from "../../application/utils/encrypt";
-import { listUsers } from "../../application/user/listUsers";
-import { User } from "../../application/user/user";
-import { register } from "../../application/user/register";
+import { UserRepositoryDatabase } from "../../resources/user/UserRepositoryDatabase";
+import GetUserByEmail from "../../application/user/GetUserByEmail";
 
 const route = express();
 
-route.get("/users", async (req: Request, res: Response) => {
-  const userRepositoryPG = new DataPostgres();
-  const { success, data, message } = await listUsers(userRepositoryPG);
-
-  if (!success) {
-    res.status(500).json({ success, error: message });
-  }
-
-  res.status(200).send({ success: true, data });
-});
-
-route.get("/user/:email", (req: Request, res: Response) => {
-  const { email } = req.params;
-
-  const emailValid = emailIsvalid(email);
-
-  if (!emailValid) {
-    res.status(500).send({ message: `Email invalid` });
+route.get("/users/:email", async (req: Request, res: Response) => {
+  try {
+    const userRepo = new UserRepositoryDatabase();
+    const user = await new GetUserByEmail(userRepo).execute(req.params.email);
+    return res.status(200).json({ user });
+  } catch (e: any) {
+    return res.status(400).json({ error: e.message });
   }
 });
 
-route.post("/user", async (req: Request, res: Response) => {
-  const { name, email, password } = req.body;
+// route.post("/users", async (req: Request, res: Response) => {
+//   const { name, email, password } = req.body;
+//   const user = User.create(name, email, password);
+//   const dbpg = new RepositoryDatabase();
+//   const { success, message } = await register(dbpg, user);
 
-  if (!name) {
-    return res
-      .status(400)
-      .json({ error: { message: "Name field is required!" } });
-  }
+//   if (!success) {
+//     return res.status(500).json({ success, message });
+//   }
 
-  if ((name as string).length < 3) {
-    return res.status(400).json({
-      error: { message: "The name field must have at least 3 characters" },
-    });
-  }
-
-  if (!email) {
-    return res
-      .status(400)
-      .json({ error: { message: "Email field is required!" } });
-  }
-
-  if (!emailIsvalid(email)) {
-    return res.status(400).json({ error: { message: "Invalid email field!" } });
-  }
-
-  if (!password) {
-    return res
-      .status(400)
-      .json({ error: { message: "password field is required!" } });
-  }
-
-  if ((password as string).length < 6) {
-    return res.status(400).json({
-      error: { message: "The password field must have at least 6 characters" },
-    });
-  }
-
-  const newUser: User = {
-    name,
-    email,
-    password: creatHashPassword(password),
-  };
-
-  const dbpg = new DataPostgres();
-  const { success, message } = await register(dbpg, newUser);
-
-  if (!success) {
-    return res.status(500).json({ success, message });
-  }
-
-  res.status(200).json({ success, message: "User registered successfully" });
-});
+//   res.status(200).json({ success, message: "User registered successfully" });
+// });
 
 export default route;
