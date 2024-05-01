@@ -1,13 +1,14 @@
-import { UserRepository } from "../../resources/user/userRepository";
+import { UserRepository } from "../../resources/user/UserRepository";
 import User from "./User";
 
-export class Register {
-  constructor(readonly userRepository: UserRepository) {}
+export class SaveUser {
+  constructor(private readonly userRepository: UserRepository) {}
 
   async execute(input: any) {
     const existUser = await this.userRepository.getUserByEmail(input.email);
     if (existUser) throw new Error("User already exist!");
     const user = User.create(input.name, input.email, input.password);
-    await this.userRepository.saveUser(user);
+    const userId = await this.userRepository.saveUser(user);
+    return userId;
   }
 }

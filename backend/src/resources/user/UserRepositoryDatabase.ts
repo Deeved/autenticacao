@@ -1,5 +1,5 @@
 import { Client } from "pg";
-import { UserRepository } from "./userRepository";
+import { UserRepository } from "./UserRepository";
 import User from "../../application/user/User";
 
 export class UserRepositoryDatabase implements UserRepository {
@@ -13,35 +13,35 @@ export class UserRepositoryDatabase implements UserRepository {
     database: process.env.DBCLUSTER,
   };
 
-  constructor() {
-    this.client = new Client(this.config);
-  }
-
   async getUserByEmail(email: string): Promise<User | undefined> {
-    await this.client.connect();
-
-    const { rows: result } = await this.client.query(
-      `SELECT * FROM users WHERE email = '${email}'`
-    );
-
-    if (!result[0]) return;
-
-    let user = User.restore(
-      result[0].id,
-      result[0].name,
-      result[0].email,
-      result[0].password,
-      result[0].created_at
-    );
-
-    return user;
+    try {
+      this.client = new Client(this.config);
+      await this.client.connect();
+      const { rows: result } = await this.client.query(
+        `SELECT * FROM users WHERE email = '${email}'`
+      );
+      if (!result[0]) return;
+      let user = User.restore(
+        result[0].id,
+        result[0].name,
+        result[0].email,
+        result[0].password,
+        result[0].created_at
+      );
+      await this.client.end();
+      return user;
+    } catch (e) {
+      throw new Error("Error when getting user by email");
+    } finally {
+      await this.client.end();
+    }
   }
 
-  async saveUser(user: User): Promise<any> {
+  async saveUser(user: User): Promise<{ id: string }> {
     try {
+      this.client = new Client(this.config);
       await this.client.connect();
-
-      const result = await this.client.query(
+      const { rows } = await this.client.query(
         `INSERT INTO users (id, name, email, password, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING id`,
         [
           user.id,
@@ -51,18 +51,12 @@ export class UserRepositoryDatabase implements UserRepository {
           new Date().toISOString().slice(0, 19).replace(".", " "),
         ]
       );
-
-      console.log(result);
-
-      if (!result.rows[0].id) {
-        return { success: false, message: "Error registering user" };
-      }
-
-      return { success: true };
+      const userId = rows[0];
+      return userId;
     } catch (error) {
-      return { success: false, message: "Error registering user" };
+      throw new Error("Error when save user");
     } finally {
-      this.client.end();
+      await this.client.end();
     }
   }
 }
