@@ -59,4 +59,20 @@ export class UserRepositoryDatabase implements UserRepository {
       await this.client.end();
     }
   }
+
+  async saveTokenUser(user: User, token: string): Promise<void> {
+    try {
+      this.client = new Client(this.config);
+      await this.client.connect();
+      const { rows } = await this.client.query(
+        `UPDATE users SET token=$1 WHERE id=$2 RETURNING token`,
+        [token, user.id]
+      );
+      if (!rows[0]) throw new Error("Error when save token user");
+    } catch (error) {
+      throw new Error("Error when save token user");
+    } finally {
+      await this.client.end();
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import emailIsvalid from "../utils/emailValidator";
-import { creatHashPassword } from "../utils/encrypt";
+import { createHashPassword } from "../utils/encrypt";
 
 export default class User {
   private constructor(
@@ -26,7 +26,7 @@ export default class User {
       userId,
       name,
       email,
-      creatHashPassword(password),
+      createHashPassword(password),
       new Date().toISOString().slice(0, 19).replace(".", " ")
     );
   }
