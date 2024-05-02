@@ -1,6 +1,6 @@
 import { Client } from "pg";
 import { UserRepository } from "./UserRepository";
-import User from "../../application/user/User";
+import User from "../../../application/user/User";
 
 export class UserRepositoryDatabase implements UserRepository {
   private client!: Client;

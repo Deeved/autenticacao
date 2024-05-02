@@ -1,4 +1,4 @@
-import User from "../../application/user/User";
+import User from "../../../application/user/User";
 
 export interface UserRepository {
   getUserByEmail(email: string): Promise<User | undefined>;

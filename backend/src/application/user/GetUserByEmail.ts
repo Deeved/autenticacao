@@ -1,4 +1,4 @@
-import { UserRepositoryDatabase } from "../../resources/user/UserRepositoryDatabase";
+import { UserRepositoryDatabase } from "../../resources/user/database/UserRepositoryDatabase";
 import emailIsvalid from "../utils/emailValidator";
 import type User from "./User";
 

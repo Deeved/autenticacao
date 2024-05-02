@@ -1,4 +1,4 @@
-import { UserRepository } from "../../resources/user/UserRepository";
+import { UserRepository } from "../../resources/user/database/UserRepository";
 import User from "./User";
 
 export class SaveUser {

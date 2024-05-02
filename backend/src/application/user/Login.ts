@@ -1,4 +1,4 @@
-import { UserRepository } from "../../resources/user/UserRepository";
+import { UserRepository } from "../../resources/user/database/UserRepository";
 import emailIsvalid from "../utils/emailValidator";
 import { compareHashsPassword } from "../utils/encrypt";
 import { sign } from "jsonwebtoken";

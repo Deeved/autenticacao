@@ -1,6 +1,6 @@
 import express from "express";
 import { Request, Response } from "express";
-import { UserRepositoryDatabase } from "../../resources/user/UserRepositoryDatabase";
+import { UserRepositoryDatabase } from "../../resources/user/database/UserRepositoryDatabase";
 import GetUserByEmail from "../../application/user/GetUserByEmail";
 import { SaveUser } from "../../application/user/SaveUser";
 import Login from "../../application/user/Login";
