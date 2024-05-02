@@ -2,7 +2,6 @@ import { UserRepository } from "../../resources/user/database/UserRepository";
 import { UserTokenService } from "../../resources/user/services/UserTokenService";
 import emailIsvalid from "../utils/emailValidator";
 import { compareHashsPassword } from "../utils/encrypt";
-import { sign } from "jsonwebtoken";
 
 export default class Login {
   constructor(
