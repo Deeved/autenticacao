@@ -1,10 +1,14 @@
 import { UserRepository } from "../../resources/user/database/UserRepository";
+import { UserTokenService } from "../../resources/user/services/UserTokenService";
 import emailIsvalid from "../utils/emailValidator";
 import { compareHashsPassword } from "../utils/encrypt";
 import { sign } from "jsonwebtoken";
 
 export default class Login {
-  constructor(private readonly userRepo: UserRepository) {}
+  constructor(
+    private readonly userRepo: UserRepository,
+    private readonly userTokenService: UserTokenService
+  ) {}
 
   async execute(input: {
     email: string;
@@ -23,7 +27,10 @@ export default class Login {
     );
     if (!isEqualHashPassword) throw new Error("Invalid password!");
     const secret = process.env.SECRET!;
-    const token = sign({ id: outputGetUser.id }, secret);
+    const token = this.userTokenService.getToken(
+      { id: outputGetUser.id },
+      secret
+    );
     await this.userRepo.saveTokenUser(outputGetUser, token);
     return { token };
   }

@@ -4,6 +4,7 @@ import { UserRepositoryDatabase } from "../../resources/user/database/UserReposi
 import GetUserByEmail from "../../application/user/GetUserByEmail";
 import { SaveUser } from "../../application/user/SaveUser";
 import Login from "../../application/user/Login";
+import UserTokenServiceJsonWebToken from "../../resources/user/services/UserTokenServiceJsonWebToken";
 
 const route = express();
 
@@ -30,7 +31,10 @@ route.post("/users", async (req: Request, res: Response) => {
 route.post("/login", async (req: Request, res: Response) => {
   try {
     const userRepo = new UserRepositoryDatabase();
-    const output = await new Login(userRepo).execute(req.body);
+    const userTokenService = new UserTokenServiceJsonWebToken();
+    const output = await new Login(userRepo, userTokenService).execute(
+      req.body
+    );
     res.status(200).json(output);
   } catch (e: any) {
     return res.status(400).json({ error: e.message });
